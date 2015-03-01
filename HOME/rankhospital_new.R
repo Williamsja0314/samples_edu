@@ -61,7 +61,8 @@ rankhospital <- function(state, outcome, ranking) {
         myhospitalset <- subset(outcome_extract,outcome_extract[,7] == "NC")
         # sort on hospital name
         finalmyhospitalset <- subset(myhospitalset,!is.na(myhospitalset[,11]))
-        
+        finalmyhospitalset <- finalmyhospitalset[order(finalmyhospitalset$Hospital.Name),]
+        ############# STOPPED
         ##Get rankings
         allranks <- order(newmyhospitalset[,selectnumber])
         big <- tail(allranks,1)
