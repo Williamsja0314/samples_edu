@@ -1,10 +1,16 @@
+#Write a function called rankhospital that takes three arguments: the 2-character
+#abbreviated name of a state (state), an outcome (outcome), and the ranking of a
+#hospital in that state for that outcome (num).
+
 #rank hospitals by outcome in state
-##outcome <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
-ding the best hospital in a state
-best <- function(outcome, num = "best" ) {
-        outcome <- tolower(outcome)
-        selectnumber <- 0L
-        
+
+
+
+
+# Finding rank of hospital in a state
+rankall <- function(outcome, ranking = "best") {
+
+        selectnumber <- 0
         if(outcome == "heart attack") {
                 selectnumber <- 11
         } else if(outcome == "heart failure") {
@@ -14,38 +20,72 @@ best <- function(outcome, num = "best" ) {
         } else {
                 stop("invalid outcome")
         }
+        if(typeof(ranking) == "character") {
+                ranking <- tolower(ranking)
+                if(ranking == "best"){
+                        xrank <- 1
+                } else if(ranking == "worst") {
+                        xrank <- "worst"
+                        #print("setting xrank to worst")
+                } else {
+                        stop("invalid ranking")
+                }
+        } else {
+                if(ranking < 1) {
+                        stop("invalid ranking")
+                } else {
+                        xrank <- as.integer(ranking)
+                }
+                        
+        }                
+                
+        
+        outcome_data <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
+        outcome_extract <- subset(outcome_data[,1:24])
+        outcome_extract[, 11] <- suppressWarnings(as.numeric(outcome_extract[, 11]))
+        outcome_extract[, 17] <- suppressWarnings(as.numeric(outcome_extract[, 17]))
+        outcome_extract[, 23] <- suppressWarnings(as.numeric(outcome_extract[, 23]))
+        
         hospitals <- read.csv("rprog_data3/hospital-data.csv", colClasses = "character")
         allstates <- sort(unique(hospitals[,7]))
-        statelength <- lenght(allstates)
-        statcases <- data.frame(id=rep(NA, 1), hospital=rep("", 1), stringsAsFactors=FALSE)
-        for i in 1:length do {
+        statelength <- length(allstates)
+        hospstate <- data.frame(hospital=rep("", 1), state=rep("", 1), stringsAsFactors=FALSE)
+        for(i in 1:statelength) { 
+                xstate <- allstates[i]
+                hname <- "NA"
+                hstate <- "NA"
+                myhospitalset <- subset(outcome_extract,outcome_extract[,7] == xstate)
+                # sort on rank and hospital name
+                myselection <- subset(myhospitalset,!is.na(myhospitalset[,selectnumber]))
+                #myselection <- myselection[order(myselection$Hospital.Name),]
+                myselection <- myselection[order(myselection[,selectnumber]),] 
+                #myselection <- myselection[order(myselection[,selectnumber], myselection[,2]),]
+                mylength <- length(myselection)
+
+
+
+        if(xrank == "worst") {
+                hospitalchoice <- tail(myselection)
+                #print(xrank)
+        } else {
+                hospitalchoice <- myselection[xrank,2:7]
                 
         }
+        
+        
+        hname <- (hospitalchoice$Hospital.Name)
+        #print(hname)
+        hstate <- (hospitalchoice$State)
+        #print(i)
+        
+                hospstate[i, ] <- c(hname, hstate)
+                #print(hospstate)
+                #print(hstate)
+                #print(hospstate)
 
-
         
+      
+        }
         
-        #print(selectnumber)
-        outcome <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
-        outcome[, 11] <- suppressWarnings(as.numeric(outcome[, 11]))
-        outcome[, 17] <- suppressWarnings(as.numeric(outcome[, 17]))
-        outcome[, 23] <- suppressWarnings(as.numeric(outcome[, 23]))
-        
-        ## Check that state and outcome are valid
-        validoutcomes <- subset(outcome[,1:24],outcome[,7] == xstate)
-        newvalidoutcomes <- subset(validoutcomes,!is.na(validoutcomes[,selectnumber]))
-        ## Return hospital name in that state with lowest 30-day death
-        ## rate
-        thebest <- numeric(0)
-        thebest <- head(sort(newvalidoutcomes[,selectnumber]),1)
-        #print(selectnumber)
-        #print(thebest)
-        
-        comparebest <- ""
-        comparebest <- subset(newvalidoutcomes,newvalidoutcomes[,selectnumber] == thebest)
-        besthosp <- comparebest[,2]
-        #print(besthosp)
-        #return(sort(besthosp))
-        statcases[i, ] <- c(mod_id[i], besthosp)
-        print(statcases)
-        
+        print(hospstate,rownames = FALSE)
+}

@@ -1,40 +1,55 @@
-#rank hospitals by outcome in state
-##outcome <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
+#Write a function called rankhospital that takes three arguments: the 2-character
+#abbreviated name of a state (state), an outcome (outcome), and the ranking of a
+#hospital in that state for that outcome (num).
 
+#rank hospitals by outcome in state
 
 
 
 
 # Finding rank of hospital in a state
 rankhospital <- function(state, outcome, ranking) {
+        
+        outcome_data <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
+        outcome_extract <- subset(outcome_data[,1:24])
+        outcome_extract[, 11] <- suppressWarnings(as.numeric(outcome_extract[, 11]))
+        outcome_extract[, 17] <- suppressWarnings(as.numeric(outcome_extract[, 17]))
+        outcome_extract[, 23] <- suppressWarnings(as.numeric(outcome_extract[, 23]))
+        
         hospitals <- read.csv("rprog_data3/hospital-data.csv", colClasses = "character")
         allstates <- sort(unique(hospitals[,7]))
-        ## Read outcome data
+        
         if(typeof(ranking) == "character") {
                 ranking <- tolower(ranking)
                 if(ranking == "best"){
                         xrank <- 1
-                } else if(tolower(ranking) == "worst") {
+                } else if(ranking == "worst") {
                         xrank <- "worst"
                         #print("setting xrank to worst")
                 } else {
                         stop("invalid ranking")
                 }
-        }
-        if(typeof(ranking) == "double") {
-                xrank <- ranking
-        }
-        if(typeof(ranking) == "integer") {
-                xrank <- as.numeric(ranking)
-        }
-                
-        xstate <- "ZZ"
-        state <- toupper(state)
-        outcome <- tolower(outcome)
-        validState <- state %in% allstates
-        if(validState){
-                xstate <- state
         } else {
+                if(ranking < 1) {
+                        stop("invalid ranking")
+                } else {
+                        xrank <- as.integer(ranking)
+                }
+                
+        }
+
+        #print("xrank is now")
+        #print(xrank)
+        
+        if(typeof(state) != "character") {
+                
+                stop("invalid state")
+        } else { 
+                xstate <- toupper(state)
+        }
+        
+        validState <- xstate %in% allstates
+        if(!(validState)){
                 stop("invalid state")
         }
         selectnumber <- 0
@@ -49,36 +64,32 @@ rankhospital <- function(state, outcome, ranking) {
                 stop("invalid outcome")
         }
         
-        
-        #print(selectnumber)
-        outcome <- read.csv("rprog_data3/outcome-of-care-measures.csv", colClasses = "character")
-        outcome[, 11] <- suppressWarnings(as.numeric(outcome[, 11]))
-        outcome[, 17] <- suppressWarnings(as.numeric(outcome[, 17]))
-        outcome[, 23] <- suppressWarnings(as.numeric(outcome[, 23]))
-        
-        ## Check that state and outcome are valid
-        myhospitalset <- subset(outcome[,1:24],outcome[,7] == xstate)
-        newmyhospitalset <- subset(myhospitalset,!is.na(myhospitalset[,selectnumber]))
-        
+  
+        myhospitalset <- subset(outcome_extract,outcome_extract[,7] == xstate)
+        # sort on rank and hospital name
+        myselection <- subset(myhospitalset,!is.na(myhospitalset[,selectnumber]))
+        #myselection <- myselection[order(myselection$Hospital.Name),]
+        #myselection <- myselection[order(myselection[,selectnumber]),] 
+        myselection <- myselection[order(myselection[,selectnumber], myselection[,2]),]
+        mylength <- length(myselection)
         ##Get rankings
-        allranks <- order(newmyhospitalset[,selectnumber])
-        big <- tail(allranks,1)
-        
+        #print("my length is now")
+        #print(mylength)
+        #print(xrank)
+
+
+        #if(xrank > mylength){
+        #      stop("invalid rank")
+        #}
+                
         if(xrank == "worst") {
-                xrank <- big
+                hospitalname <- tail(myselection[,2],1)
                 #print(xrank)
-        }
-        validrank <- xrank %in% (order(newmyhospitalset[,selectnumber]))
-        
-        if(!validrank) {
-                hospitalname <- "NA"
         } else {
-                
-                hospitalrecord <- subset(newmyhospitalset,order(newmyhospitalset[,selectnumber]) == xrank)
-                hospitalname <- hospitalrecord[,2]
-                #print(hospitalname[1,])
+                hospitalname <- myselection[xrank,2]
                 
         }
-         
+
+                 
         return(hospitalname)
 }
