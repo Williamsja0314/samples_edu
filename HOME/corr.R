@@ -1,3 +1,4 @@
+# R programming from Coursera
 # corr.R
 # This script readsdata files in the
 # desired directory and returns the correlation
