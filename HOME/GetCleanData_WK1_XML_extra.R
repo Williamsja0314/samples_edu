@@ -1,6 +1,6 @@
 # XML
 library(XML)
-#fileUrl <- "http://www.w3schools.com/xml/simple.xml"
+fileUrl <- "http://www.w3schools.com/xml/simple.xml"
 doc <- xmlTreeParse(fileUrl,useInternal=TRUE)
 rootNode <- xmlRoot(doc)
 xmlName(rootNode)
@@ -19,6 +19,17 @@ rootNode[[4]][[2]]
 rootNode[[4]][[1]][[1]]
 #description field
 rootNode[[5]][[3]]
+#Newly-added
+xpathSApply(rootNode,"//price",xmlValue)
+length(xpathSApply(rootNode,"//price",xmlValue))
+xpathSApply(rootNode,"//price[1]",xmlValue)
+xpathSApply(rootNode,"//price[5]",xmlValue)
+xpathSApply(rootNode,"//name",xmlValue)
+names <- (!is.na(xpathSApply(rootNode,"//name",xmlValue)))
+names
+length(names)
+xpathSApply(rootNode,"//name[1]",xmlValue)
+xpathSApply(rootNode,"//name[5]",xmlValue)
 
 
 #Using xmlSApply
