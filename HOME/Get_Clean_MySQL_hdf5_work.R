@@ -37,25 +37,24 @@ acsdata <- htmlTreeParse(url1, useInternalNodes=T)
 xpathSApply(acsdata,"//title", xmlValue)
 #
 #
-#
+#The "for" fixed file question:
 fixed_table <- read.fwf(
         file=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"),
         skip=4,
         widths=c(12, 7,4, 9,4, 9,4, 9,4))
 ##
-# variation
-#
-#fixed_table <- readLines(con=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"))
-# Skip 4 lines
-#fixed_table <- fixed_table[-(1:4)]
-
-#mydata <- data.frame(var1 = substr(fixed_table,1,10),
-#                     var2 = substr(fixed_table, 16,19),
-#                     var3 = substr(fixed_table, 20, 23),
-#                     var4 = substr(fixed_table, 29, 32)  # and so on and so on
-#)
-
-
+# Variation:
+##
+##The -1 in the widths argument says there is a one-character column
+#that should be ignored,the -5 in the widths argument says there is
+#a five-character column that should be ignored, likewise.
+mydata <- read.fwf(
+        file=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"),
+        widths=c(-1,9,-5,4,4,-5,4,4,-5,4,4,-5,4,4),
+        skip=4
+)
+##
+##
 # HDF5  large data sets
 source("http://bioconductor.org/biocLite.R")
 biocLite("rhdf5")
