@@ -25,6 +25,37 @@ dim(affyMisSmall)
 ncol(affyMisSmall)
 dbDisconnect(hg19)
 
+#Quiz 2
+#Read HTML document line-by-line
+con <- url("http://biostat.jhsph.edu/~jleek/contact.html")
+acs <- readLines(con)
+close(con)
+acs
+# a variation
+url1 <- "http://biostat.jhsph.edu/~jleek/contact.html"
+acsdata <- htmlTreeParse(url1, useInternalNodes=T)
+xpathSApply(acsdata,"//title", xmlValue)
+#
+#
+#
+fixed_table <- read.fwf(
+        file=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"),
+        skip=4,
+        widths=c(12, 7,4, 9,4, 9,4, 9,4))
+##
+# variation
+#
+#fixed_table <- readLines(con=url("http://www.cpc.ncep.noaa.gov/data/indices/wksst8110.for"))
+# Skip 4 lines
+#fixed_table <- fixed_table[-(1:4)]
+
+#mydata <- data.frame(var1 = substr(fixed_table,1,10),
+#                     var2 = substr(fixed_table, 16,19),
+#                     var3 = substr(fixed_table, 20, 23),
+#                     var4 = substr(fixed_table, 29, 32)  # and so on and so on
+#)
+
+
 # HDF5  large data sets
 source("http://bioconductor.org/biocLite.R")
 biocLite("rhdf5")
