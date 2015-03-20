@@ -82,3 +82,19 @@ years <- group_by(chicago,year)
 summarize(years, pm25 = mean(pm25,na.rm = TRUE), o3 = max(o3tmeans), no2 = median(no2tmean2))
 ## Special operator to allow chain operations together '%>%'  .. a pipeline operator
 chicago %>% mutate(month = as.POSITlt(data)$mon + 1) %>% group_by(month) %>% summarize(pm25 = mean(pm25, na.rm = TRUE), o3 = max(o3tmean2), no2 = median(no2tmean2))
+####
+###
+if(!file.exists("./data")) {dir.create(",/data")}
+fileUrl1 = "https://dl.dropboxusercontent.com/u/7710864/data/reviews-apr29.csv"
+fileUrl2 = "https://dl.dropboxusercontent.com/u/7710864/data/solutions-apr29.csv"
+download.file(fileUrl1,destfile="./data/reviews.csv")
+download.file(fileUrl2,destfile="./data/solutions.csv")
+reviews <- read.csv("./data/reviews.csv");solutions <- read.csv("./data/solutions.csv")
+head(reviews,2)
+names(reviews);names(solutions)
+#merging on 'id'
+#default is to merge on all common column names.  Should specify!
+mergedData <- merge(reviews,solutions,by.x="solution_id",by.y="id",all=TRUE)
+head(mergedData)
+# can use join from dplyr.  Less features.
+# join is good for merging multiple data frames - df.
