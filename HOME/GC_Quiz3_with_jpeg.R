@@ -6,7 +6,9 @@ which(agricultureLogical)
 #
 ## read in with jpeg package
 library(jpeg)
-img.n <- readJPEG(system.file("img","getdata-jeff.jpg", package="jpeg"),native=TRUE) 
+file.info("getdata-jeff.jpg")
+#img.n <- readJPEG(system.file("img","getdata-jeff.jpg", package="jpeg"),native=TRUE) 
+img.n <- readJPEG("getdata-jeff.jpg",native=TRUE)
 ##
 GDP <- read.csv("./data/GDP.csv")
 EDU <- read.csv("./data/EDU.csv")
