@@ -1,5 +1,3 @@
-
-
 acsq3 <- read.csv("./data/getdata-data-ss06hid.csv", header=TRUE)
 agricultureLogical <- (acsq3$ACR == 3 & acsq3$AGS == 6)
 which(agricultureLogical)
@@ -9,6 +7,7 @@ library(jpeg)
 file.info("getdata-jeff.jpg")
 #img.n <- readJPEG(system.file("img","getdata-jeff.jpg", package="jpeg"),native=TRUE) 
 img.n <- readJPEG("getdata-jeff.jpg",native=TRUE)
+quantile(img.n,c(0,.30,.80,1))
 ##
 GDP <- read.csv("./data/GDP.csv")
 EDU <- read.csv("./data/EDU.csv")
