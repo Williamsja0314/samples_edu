@@ -11,4 +11,6 @@ quantile(img.n,c(0,.30,.80,1))
 ##
 GDP <- read.csv("./data/GDP.csv")
 EDU <- read.csv("./data/EDU.csv")
-mergedData <- merge(GDP,EDU,by.x="X",by.y="CountryCode",all=FALSE, na.rm=TRUE)
+EDU <- subset(EDU,!is.na(EDU$CountryCode))
+mergedData <- merge(EDU,GDP,by.x= "CountryCode",by.y= "X",all=FALSE)
+AvgOECD <- subset(GDP,GDP$Income.Group == 'High income: nonOECD')
